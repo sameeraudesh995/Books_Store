@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BookStore.Business.Services.BookService
 {
-    internal class BookService
+    public class BookService
     {
 
     }

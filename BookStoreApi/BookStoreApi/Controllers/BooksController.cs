@@ -1,4 +1,5 @@
-﻿using BookStoreApi.Models;
+﻿using BookStore.Business.Services.BookService;
+using BookStoreApi.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,7 +9,7 @@ namespace BookStoreApi.Controllers
     [ApiController]
     public class BooksController : ControllerBase
     {
-        //private readonly BookService _bookService;
+        private readonly BookService _bookService;
 
         private static List<Book> books = new()
         {
