@@ -1,5 +1,5 @@
 ﻿using BookStore.Business.Services.BookService;
-using BookStoreApi.Models;
+using BookStore.DataAccess.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,89 +9,44 @@ namespace BookStoreApi.Controllers
     [ApiController]
     public class BooksController : ControllerBase
     {
-        private readonly BookService _bookService;
+        private readonly IBookService _bookService;
 
-        private static List<Book> books = new()
+        public BooksController(IBookService bookService)
         {
-            new Book
-            {
-                Id = 1,
-                Author = "Author 1",
-                Title = "Book 1",
-                PublicationYear = 2022
-            },
-            new Book
-            {
-                Id = 2,
-                Author = "Author 2",
-                Title = "Book 2",
-                PublicationYear = 2023
-            }
-        };
-
-        
+            _bookService = bookService;
+        }
 
         [HttpGet]
-        public IActionResult Get()
+        public async Task<ActionResult<IEnumerable<Book>>> Get()
         {
-            return Ok(books);
+            var response = await _bookService.GetBookAsync();
+            return Ok(response);
         }
-        [HttpGet("{id:int}")]
-        public IActionResult Get(int id)
+        [HttpGet("{id:int}")] 
+        public async Task<IActionResult> Get(int id)
         {
-            var book = books.FirstOrDefault(b => b.Id == id);
-
-            if (book is null)
-            {
-                return NotFound();
-            }
-            return Ok(book);
+            var response = await _bookService.GetBookAsync(id);
+            return Ok(response);
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] Book book)
+        public async Task<IActionResult> Post([FromBody] Book book)
         {
-            var maxId = books.Max(b => b.Id);
-
-            var newBook = new Book
-            {
-                Id = maxId + 1,
-                Title = book.Title,
-                PublicationYear = book.PublicationYear,
-                Author = book.Author,
-            };
-            books.Add(newBook);
-            return Ok(newBook);
+            var response = await _bookService.AddBookAsync(book);
+            return Ok(response);
         }
 
         [HttpPut("{id:int}")]
-        public IActionResult Put(int id, [FromBody] Book book)
+        public async Task<IActionResult> Put(int id, [FromBody] Book book)
         {
-          var existingBook = books.FirstOrDefault(b => b.Id ==id);
-            if (existingBook is null) 
-            { 
-
-                return NotFound();
-            }
-
-           existingBook.Title = book.Title;
-           existingBook.PublicationYear = book.PublicationYear;
-           existingBook.Author = book.Author;
-
-            
-            return Ok(existingBook);
+            var response = await _bookService.UpdateBookAsync(id, book);
+            return Ok(response);
         }
         [HttpDelete("{id:int}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var book = books.FirstOrDefault(b => b.Id == id);
-            if (book is null)
-            {
-                return NotFound();
-            }
-
-            books.Remove(book);
-            return Ok(book);
+            var response = await _bookService.DeleteBookAsync(id);
+            return Ok(response);
         }
 
     }
