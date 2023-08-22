@@ -1,4 +1,4 @@
-﻿using System;
+﻿ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -72,7 +72,7 @@ namespace BookStore.Business.Services.BookService;
             throw;
         }
 
-        return "Book Successfully delete";
+        return "Book Successfully deleted";
         }
 
      
